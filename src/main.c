@@ -14,6 +14,7 @@
 #include "staff.h"
 #include "housekeeping.h"
 #include "reports.h"
+#include "config.h"
 
 static const MenuItem main_items[] = {
     {1, "Quartos",              ACCESS_BASICO,   room_menu},
@@ -25,6 +26,7 @@ static const MenuItem main_items[] = {
     {7, "Governanca",           ACCESS_OPERADOR, hk_menu},
     {8, "Funcionarios",         ACCESS_GERENTE,  staff_menu},
     {9, "Relatorios",           ACCESS_BASICO,   report_menu},
+    {10,"Configuracoes",         ACCESS_ADMIN,    config_menu},
     {0, "Sair",                 0,               NULL}
 };
 
