@@ -1,0 +1,16 @@
+# Binários compilados
+*.o
+*.exe
+hotel
+
+# Dados gerados em runtime
+data/
+reports/
+
+# Documentacao interna
+SCOPE.md
+
+# Arquivos de editor
+.vscode/
+*.swp
+*~
