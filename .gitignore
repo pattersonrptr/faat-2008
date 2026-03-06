@@ -6,6 +6,7 @@ hotel
 # Dados gerados em runtime
 data/
 reports/
+backups/
 
 # Documentacao interna
 SCOPE.md

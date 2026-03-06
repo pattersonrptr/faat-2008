@@ -266,6 +266,203 @@ void finance_receivables(void) {
 }
 
 /* =========================================================
+ *  Caixa por turno — helpers
+ * ========================================================= */
+static const char *shift_type_str(ShiftType t) {
+    switch (t) {
+        case SHIFT_MANHA: return "Manha";
+        case SHIFT_TARDE: return "Tarde";
+        case SHIFT_NOITE: return "Noite";
+        default:          return "?";
+    }
+}
+
+static CashShift *find_active_shift(void) {
+    for (int i = 0; i < g_shift_count; i++) {
+        if (g_shifts[i].active) return &g_shifts[i];
+    }
+    return NULL;
+}
+
+/* =========================================================
+ *  Abrir turno
+ * ========================================================= */
+void finance_open_shift(void) {
+    if (!auth_require(ACCESS_SUPERVISOR)) return;
+
+    clear_screen();
+    print_header("ABRIR TURNO DE CAIXA");
+
+    CashShift *active = find_active_shift();
+    if (active) {
+        char opened_str[20];
+        datetime_to_string(active->opened_at, opened_str);
+        printf("  [!] Ja existe um turno aberto:\n");
+        printf("  Turno #%d — %s — %s — Operador: %s\n",
+               active->id, shift_type_str(active->type),
+               opened_str, active->operator_name);
+        printf("  Feche o turno atual antes de abrir um novo.\n");
+        pause_screen();
+        return;
+    }
+    if (g_shift_count >= MAX_SHIFTS) {
+        printf("  [!] Limite de turnos atingido.\n");
+        pause_screen();
+        return;
+    }
+
+    printf("  Tipo de turno:\n");
+    printf("  [1] Manha   [2] Tarde   [3] Noite\n");
+    int op = input_int("  Opcao", 1, 3);
+
+    CashShift *s = &g_shifts[g_shift_count];
+    memset(s, 0, sizeof(CashShift));
+    s->id          = storage_next_shift_id();
+    strncpy(s->operator_name, g_session.staff.full_name,
+            sizeof(s->operator_name) - 1);
+    s->operator_id = g_session.staff.id;
+    s->type        = (ShiftType)(op - 1);
+    s->opened_at   = time(NULL);
+    s->active      = 1;
+    g_shift_count++;
+
+    storage_save_shifts();
+
+    char log[80];
+    snprintf(log, sizeof(log), "SHIFT OPEN id=%d type=%s",
+             s->id, shift_type_str(s->type));
+    storage_audit_log(g_session.staff.id, log);
+
+    char opened_str[20];
+    datetime_to_string(s->opened_at, opened_str);
+    printf("\n  [OK] Turno #%d (%s) aberto em %s.\n",
+           s->id, shift_type_str(s->type), opened_str);
+    pause_screen();
+}
+
+/* =========================================================
+ *  Fechar turno
+ * ========================================================= */
+void finance_close_shift(void) {
+    if (!auth_require(ACCESS_SUPERVISOR)) return;
+
+    clear_screen();
+    print_header("FECHAR TURNO DE CAIXA");
+
+    CashShift *s = find_active_shift();
+    if (!s) {
+        printf("  Nenhum turno aberto no momento.\n");
+        pause_screen();
+        return;
+    }
+
+    char opened_str[20];
+    datetime_to_string(s->opened_at, opened_str);
+    printf("  Turno #%d — %s — Aberto em %s por %s\n\n",
+           s->id, shift_type_str(s->type), opened_str, s->operator_name);
+
+    if (!input_confirm("  Confirmar fechamento? (s/n): ")) {
+        printf("  Operacao cancelada.\n");
+        pause_screen();
+        return;
+    }
+
+    s->closed_at = time(NULL);
+    s->active    = 0;
+
+    /* Totaliza checkouts ocorridos durante o turno */
+    for (int i = 0; i < g_reservation_count; i++) {
+        Reservation *r = &g_reservations[i];
+        if (r->status != RES_CHECKOUT_FEITO) continue;
+        if (r->actual_check_out < s->opened_at ||
+            r->actual_check_out >= s->closed_at) continue;
+
+        switch (r->payment_method) {
+            case PAY_DINHEIRO:      s->total_dinheiro      += r->total_value; break;
+            case PAY_CREDITO:       s->total_credito       += r->total_value; break;
+            case PAY_DEBITO:        s->total_debito        += r->total_value; break;
+            case PAY_PIX:           s->total_pix           += r->total_value; break;
+            case PAY_TRANSFERENCIA: s->total_transferencia += r->total_value; break;
+            case PAY_FATURADO:      s->total_faturado      += r->total_value; break;
+            default: break;
+        }
+        s->grand_total     += r->total_value;
+        s->total_discounts += r->discount;
+        s->checkout_count++;
+    }
+
+    storage_save_shifts();
+
+    char log[80];
+    snprintf(log, sizeof(log), "SHIFT CLOSE id=%d total=%.2f count=%d",
+             s->id, s->grand_total, s->checkout_count);
+    storage_audit_log(g_session.staff.id, log);
+
+    /* Exibe extrato do turno fechado */
+    printf("\n");
+    print_separator('=', 55);
+    printf("  EXTRATO DO TURNO #%d (%s)\n", s->id, shift_type_str(s->type));
+    print_separator('-', 55);
+    printf("  Operador  : %s\n", s->operator_name);
+    char closed_str[20];
+    datetime_to_string(s->closed_at, closed_str);
+    printf("  Abertura  : %s\n", opened_str);
+    printf("  Fechamento: %s\n", closed_str);
+    print_separator('-', 55);
+    printf("  Checkouts : %d\n", s->checkout_count);
+    if (s->total_dinheiro      > 0.0)
+        printf("  Dinheiro     : R$ %10.2f\n", s->total_dinheiro);
+    if (s->total_credito       > 0.0)
+        printf("  Credito      : R$ %10.2f\n", s->total_credito);
+    if (s->total_debito        > 0.0)
+        printf("  Debito       : R$ %10.2f\n", s->total_debito);
+    if (s->total_pix           > 0.0)
+        printf("  PIX          : R$ %10.2f\n", s->total_pix);
+    if (s->total_transferencia > 0.0)
+        printf("  Transferencia: R$ %10.2f\n", s->total_transferencia);
+    if (s->total_faturado      > 0.0)
+        printf("  Faturado     : R$ %10.2f\n", s->total_faturado);
+    print_separator('-', 55);
+    printf("  Descontos : R$ %10.2f\n", s->total_discounts);
+    printf("  TOTAL     : R$ %10.2f\n", s->grand_total);
+    print_separator('=', 55);
+    pause_screen();
+}
+
+/* =========================================================
+ *  Histórico de turnos
+ * ========================================================= */
+void finance_shift_report(void) {
+    if (!auth_require(ACCESS_SUPERVISOR)) return;
+
+    clear_screen();
+    print_header("HISTORICO DE TURNOS");
+
+    if (g_shift_count == 0) {
+        printf("  Nenhum turno registrado.\n");
+        pause_screen();
+        return;
+    }
+
+    int start = (g_shift_count > 20) ? g_shift_count - 20 : 0;
+    printf("  %-5s %-9s %-20s %-17s %-8s %s\n",
+           "#", "Tipo", "Operador", "Abertura", "Status", "Total");
+    print_separator('-', 75);
+    for (int i = start; i < g_shift_count; i++) {
+        CashShift *cs = &g_shifts[i];
+        char opened_str[20];
+        datetime_to_string(cs->opened_at, opened_str);
+        printf("  %-5d %-9s %-20s %-17s %-8s R$ %.2f\n",
+               cs->id, shift_type_str(cs->type), cs->operator_name,
+               opened_str,
+               cs->active ? "ABERTO" : "FECHADO",
+               cs->grand_total);
+    }
+    print_separator('-', 75);
+    pause_screen();
+}
+
+/* =========================================================
  *  Menu do módulo
  * ========================================================= */
 static const MenuItem finance_items[] = {
@@ -273,6 +470,9 @@ static const MenuItem finance_items[] = {
     {2, "Caixa do dia",          ACCESS_SUPERVISOR, finance_daily_report},
     {3, "Receita por periodo",   ACCESS_SUPERVISOR, finance_period_report},
     {4, "Contas a receber",      ACCESS_SUPERVISOR, finance_receivables},
+    {5, "Abrir turno",           ACCESS_SUPERVISOR, finance_open_shift},
+    {6, "Fechar turno",          ACCESS_SUPERVISOR, finance_close_shift},
+    {7, "Historico de turnos",   ACCESS_SUPERVISOR, finance_shift_report},
     {0, "Voltar",                0,                 NULL}
 };
 

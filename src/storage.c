@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <direct.h>    /* _mkdir — Windows / MinGW */
 
 /* =========================================================
  *  Arrays globais (banco de dados em memória)
@@ -28,6 +29,9 @@ LostItem    g_lost_items[MAX_LOST_ITEMS];
 int         g_lost_item_count = 0;
 
 HotelConfig g_config;
+
+CashShift   g_shifts[MAX_SHIFTS];
+int         g_shift_count = 0;
 
 /* =========================================================
  *  Macro auxiliar para leitura/escrita binária genérica
@@ -113,6 +117,7 @@ void storage_init(void) {
     storage_load_services();
     storage_load_staff();
     storage_load_lost_items();
+    storage_load_shifts();
 
     if (storage_load_config() != 0) {
         config_set_defaults();
@@ -129,6 +134,7 @@ void storage_save_all(void) {
     storage_save_services();
     storage_save_staff();
     storage_save_lost_items();
+    storage_save_shifts();
     storage_save_config();
 }
 
@@ -247,4 +253,73 @@ void storage_audit_log(int staff_id, const char *action) {
     datetime_to_string(now, dt);
     fprintf(f, "[%s] staff_id=%d | %s\n", dt, staff_id, action);
     fclose(f);
+}
+
+/* =========================================================
+ *  Turnos de caixa
+ * ========================================================= */
+int storage_save_shifts(void)  { WRITE_ARRAY(PATH_SHIFTS, g_shifts, g_shift_count, CashShift); }
+int storage_load_shifts(void)  { READ_ARRAY(PATH_SHIFTS, g_shifts, g_shift_count, MAX_SHIFTS, CashShift); }
+
+int storage_next_shift_id(void) {
+    int max = 0;
+    for (int i = 0; i < g_shift_count; i++) {
+        if (g_shifts[i].id > max) max = g_shifts[i].id;
+    }
+    return max + 1;
+}
+
+/* =========================================================
+ *  Backup dos arquivos de dados
+ * ========================================================= */
+static int copy_file_data(const char *src, const char *dst) {
+    FILE *in = fopen(src, "rb");
+    if (!in) return 0;   /* arquivo inexistente — nao e fatal */
+    FILE *out = fopen(dst, "wb");
+    if (!out) { fclose(in); return -1; }
+    char buf[4096];
+    size_t n;
+    while ((n = fread(buf, 1, sizeof(buf), in)) > 0) {
+        if (fwrite(buf, 1, n, out) != n) {
+            fclose(in); fclose(out); return -1;
+        }
+    }
+    fclose(in);
+    fclose(out);
+    return 0;
+}
+
+int storage_backup(char *out_path, size_t out_size) {
+    time_t     now = time(NULL);
+    struct tm *lt  = localtime(&now);
+    char folder[80];
+    strftime(folder, sizeof(folder), "backups/%Y-%m-%d_%H%M%S", lt);
+
+    _mkdir("backups");             /* ignora erro se ja existe */
+    if (_mkdir(folder) != 0) return -1;
+
+    static const char *dat_files[] = {
+        PATH_ROOMS, PATH_GUESTS, PATH_RESERVATIONS,
+        PATH_SERVICES, PATH_STAFF, PATH_LOST_ITEMS,
+        PATH_CONFIG, PATH_SHIFTS
+    };
+    static const char *dat_names[] = {
+        "rooms.dat", "guests.dat", "reservations.dat",
+        "services.dat", "staff.dat", "lost_items.dat",
+        "config.dat", "shifts.dat"
+    };
+    int n = (int)(sizeof(dat_files) / sizeof(dat_files[0]));
+    for (int i = 0; i < n; i++) {
+        char dst[128];
+        snprintf(dst, sizeof(dst), "%s/%s", folder, dat_names[i]);
+        if (copy_file_data(dat_files[i], dst) < 0) return -1;
+    }
+
+    /* Copia o audit log */
+    char dst_log[128];
+    snprintf(dst_log, sizeof(dst_log), "%s/audit.log", folder);
+    copy_file_data(PATH_AUDIT_LOG, dst_log);
+
+    if (out_path) snprintf(out_path, out_size, "%s", folder);
+    return 0;
 }

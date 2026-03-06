@@ -253,4 +253,34 @@ typedef struct {
     double multiplier_diamante;
 } HotelConfig;
 
+/* =========================================================
+ *  Turno de caixa
+ * ========================================================= */
+#define MAX_SHIFTS 500
+
+typedef enum {
+    SHIFT_MANHA  = 0,
+    SHIFT_TARDE  = 1,
+    SHIFT_NOITE  = 2
+} ShiftType;
+
+typedef struct {
+    int       id;
+    char      operator_name[80];
+    int       operator_id;
+    ShiftType type;
+    time_t    opened_at;
+    time_t    closed_at;         /* 0 se ainda aberto */
+    double    total_dinheiro;
+    double    total_credito;
+    double    total_debito;
+    double    total_pix;
+    double    total_transferencia;
+    double    total_faturado;
+    double    grand_total;
+    double    total_discounts;
+    int       checkout_count;
+    int       active;            /* 1 = aberto, 0 = fechado */
+} CashShift;
+
 #endif /* TYPES_H */

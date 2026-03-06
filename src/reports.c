@@ -340,6 +340,110 @@ void report_export_csv(void) {
 }
 
 /* =========================================================
+ *  Helpers locais para CSV
+ * ========================================================= */
+static const char *clean_status_str_local(CleanStatus cs) {
+    switch (cs) {
+        case CLEAN_SUJO:         return "Sujo";
+        case CLEAN_EM_LIMPEZA:   return "Em Limpeza";
+        case CLEAN_LIMPO:        return "Limpo";
+        case CLEAN_INSPECIONADO: return "Inspecionado";
+        default:                 return "?";
+    }
+}
+
+/* =========================================================
+ *  Exportar quartos para CSV
+ * ========================================================= */
+void report_export_rooms_csv(void) {
+    if (!auth_require(ACCESS_SUPERVISOR)) return;
+
+    clear_screen();
+    print_header("EXPORTAR QUARTOS CSV");
+
+    time_t     now = time(NULL);
+    struct tm *lt  = localtime(&now);
+    char fname[80];
+    strftime(fname, sizeof(fname), "reports/quartos_%d%m%Y_%H%M%S.csv", lt);
+
+    FILE *fp = fopen(fname, "w");
+    if (!fp) { perror("  [!] Erro ao criar arquivo"); pause_screen(); return; }
+
+    fprintf(fp, "ID,Numero,Andar,Tipo,Capacidade,Diaria,Status,Limpeza,Caracteristicas\n");
+
+    int count = 0;
+    for (int i = 0; i < g_room_count; i++) {
+        Room *r = &g_rooms[i];
+        char feats[60] = "";
+        if (r->features & FEAT_AC)        strcat(feats, "AC ");
+        if (r->features & FEAT_FRIGOBAR)  strcat(feats, "Frigobar ");
+        if (r->features & FEAT_BANHEIRA)  strcat(feats, "Banheira ");
+        if (r->features & FEAT_VARANDA)   strcat(feats, "Varanda ");
+        if (r->features & FEAT_ACESSIVEL) strcat(feats, "Acessivel");
+        fprintf(fp, "%d,%s,%d,%s,%d,%.2f,%s,%s,\"%s\"\n",
+                r->id, r->number, r->floor,
+                room_type_str(r->type), r->capacity, r->daily_rate,
+                room_status_str(r->status),
+                clean_status_str_local(r->clean_status),
+                feats);
+        count++;
+    }
+    fclose(fp);
+
+    char log[128];
+    snprintf(log, sizeof(log), "EXPORT ROOMS CSV %s count=%d", fname, count);
+    storage_audit_log(g_session.staff.id, log);
+    printf("\n  [OK] %d quarto(s) exportado(s) para:\n  %s\n", count, fname);
+    pause_screen();
+}
+
+/* =========================================================
+ *  Exportar hóspedes para CSV
+ * ========================================================= */
+void report_export_guests_csv(void) {
+    if (!auth_require(ACCESS_SUPERVISOR)) return;
+
+    clear_screen();
+    print_header("EXPORTAR HOSPEDES CSV");
+
+    time_t     now = time(NULL);
+    struct tm *lt  = localtime(&now);
+    char fname[80];
+    strftime(fname, sizeof(fname), "reports/hospedes_%d%m%Y_%H%M%S.csv", lt);
+
+    FILE *fp = fopen(fname, "w");
+    if (!fp) { perror("  [!] Erro ao criar arquivo"); pause_screen(); return; }
+
+    fprintf(fp, "ID,Nome,Documento,Nascimento,Nacionalidade,Telefone,Email,"
+                "Tipo,Fidelidade,Pontos,Estadas,TotalGasto,UltimaVisita\n");
+
+    static const char *gtypes[] = {"Regular", "VIP", "Corporativo", "Grupo"};
+    int count = 0;
+    for (int i = 0; i < g_guest_count; i++) {
+        Guest *g2 = &g_guests[i];
+        char last_visit[20] = "Nunca";
+        if (g2->last_visit > 0) datetime_to_string(g2->last_visit, last_visit);
+        const char *gtype = ((int)g2->type >= 0 && (int)g2->type <= 3)
+                            ? gtypes[(int)g2->type] : "?";
+        fprintf(fp, "%d,\"%s\",%s,%s,%s,%s,\"%s\",%s,%s,%d,%d,%.2f,%s\n",
+                g2->id, g2->full_name, g2->document, g2->birth_date,
+                g2->nationality, g2->phone, g2->email,
+                gtype,
+                guest_fidelity_str(g2->fidelity_level),
+                g2->fidelity_points, g2->total_stays, g2->total_spent,
+                last_visit);
+        count++;
+    }
+    fclose(fp);
+
+    char log[128];
+    snprintf(log, sizeof(log), "EXPORT GUESTS CSV %s count=%d", fname, count);
+    storage_audit_log(g_session.staff.id, log);
+    printf("\n  [OK] %d hospede(s) exportado(s) para:\n  %s\n", count, fname);
+    pause_screen();
+}
+
+/* =========================================================
  *  Menu do módulo
  * ========================================================= */
 static const MenuItem report_items[] = {
@@ -347,7 +451,9 @@ static const MenuItem report_items[] = {
     {2, "Ranking de hospedes",         ACCESS_BASICO,    report_top_guests},
     {3, "No-shows e cancelamentos",    ACCESS_SUPERVISOR,report_noshow_cancel},
     {4, "Previsao 30 dias",            ACCESS_BASICO,    report_forecast},
-    {5, "Exportar CSV",                ACCESS_SUPERVISOR,report_export_csv},
+    {5, "Exportar CSV receita",        ACCESS_SUPERVISOR,report_export_csv},
+    {6, "Exportar CSV quartos",        ACCESS_SUPERVISOR,report_export_rooms_csv},
+    {7, "Exportar CSV hospedes",       ACCESS_SUPERVISOR,report_export_guests_csv},
     {0, "Voltar",                      0,                NULL}
 };
 

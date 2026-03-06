@@ -27,6 +27,9 @@ extern int          g_lost_item_count;
 
 extern HotelConfig  g_config;
 
+extern CashShift    g_shifts[MAX_SHIFTS];
+extern int          g_shift_count;
+
 /* =========================================================
  *  Caminhos dos arquivos de dados
  * ========================================================= */
@@ -38,6 +41,7 @@ extern HotelConfig  g_config;
 #define PATH_LOST_ITEMS   "data/lost_items.dat"
 #define PATH_CONFIG       "data/config.dat"
 #define PATH_AUDIT_LOG    "data/audit.log"
+#define PATH_SHIFTS       "data/shifts.dat"
 
 /* =========================================================
  *  Inicialização e encerramento
@@ -83,6 +87,14 @@ int  storage_next_lost_item_id(void);
 /* --- Configuração --- */
 int  storage_save_config(void);
 int  storage_load_config(void);
+
+/* --- Turnos de caixa --- */
+int  storage_save_shifts(void);
+int  storage_load_shifts(void);
+int  storage_next_shift_id(void);
+
+/* --- Backup --- */
+int  storage_backup(char *out_path, size_t out_size);
 
 /* --- Auditoria --- */
 void storage_audit_log(int staff_id, const char *action);

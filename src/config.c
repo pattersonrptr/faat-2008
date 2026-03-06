@@ -170,6 +170,35 @@ static void config_change_password(void) {
 }
 
 /* =========================================================
+ *  Backup dos dados
+ * ========================================================= */
+static void config_backup(void) {
+    if (!auth_require(ACCESS_ADMIN)) return;
+
+    clear_screen();
+    print_header("BACKUP DOS DADOS");
+
+    printf("  Todos os arquivos .dat serao copiados para\n");
+    printf("  uma pasta com timestamp em backups/.\n\n");
+
+    if (!input_confirm("  Confirmar backup? (s/n): ")) {
+        printf("  Operacao cancelada.\n");
+        pause_screen();
+        return;
+    }
+
+    char folder[80] = "";
+    int rc = storage_backup(folder, sizeof(folder));
+    if (rc != 0) {
+        printf("  [!] Erro ao realizar backup.\n");
+    } else {
+        storage_audit_log(g_session.staff.id, "BACKUP REALIZADO");
+        printf("  [OK] Backup salvo em:\n  %s\n", folder);
+    }
+    pause_screen();
+}
+
+/* =========================================================
  *  Menu
  * ========================================================= */
 static const MenuItem config_items[] = {
@@ -178,6 +207,7 @@ static const MenuItem config_items[] = {
     {3, "Taxas e politicas",       ACCESS_ADMIN,    config_edit_financial},
     {4, "Programa de fidelidade",  ACCESS_ADMIN,    config_edit_fidelity},
     {5, "Alterar minha senha",     ACCESS_BASICO,   config_change_password},
+    {6, "Backup dos dados",        ACCESS_ADMIN,    config_backup},
     {0, "Voltar",                  0,               NULL}
 };
 
