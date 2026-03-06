@@ -8,9 +8,6 @@ data/
 reports/
 backups/
 
-# Documentacao interna
-SCOPE.md
-
 # Arquivos de editor
 .vscode/
 *.swp
