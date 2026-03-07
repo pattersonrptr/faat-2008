@@ -1,0 +1,28 @@
+# Build outputs
+dns_server
+dns_server.exe
+web_server
+web_server.exe
+client
+client.exe
+
+# Object files
+*.o
+*.obj
+
+# Debug / profiling
+*.pdb
+*.ilk
+*.exp
+*.lib
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
