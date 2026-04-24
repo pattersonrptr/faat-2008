@@ -1,0 +1,33 @@
+# Maven build output
+target/
+
+# Compiled classes
+*.class
+
+# Package archives
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# IDE — IntelliJ IDEA
+.idea/
+*.iml
+
+# IDE — Eclipse
+.settings/
+.project
+.classpath
+bin/
+
+# IDE — VS Code
+.vscode/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Claude Code local settings (personal/machine-specific)
+.claude/
