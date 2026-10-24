@@ -1,0 +1,14 @@
+# Binários compilados
+*.o
+*.exe
+hotel
+
+# Dados gerados em runtime
+data/
+reports/
+backups/
+
+# Arquivos de editor
+.vscode/
+*.swp
+*~
