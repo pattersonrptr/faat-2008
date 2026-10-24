@@ -124,4 +124,4 @@ RESULTADO: PASSOU - todos os testes OK
 
 ## License
 
-[MIT](LICENSE).
+[MIT](../LICENSE).

@@ -4,7 +4,7 @@ A clone of the classic Pac-Man in plain Java, with every graphic drawn in **Java
 
 Rebuild of an Object-Oriented Programming course assignment at FAAT.
 
-![Java](https://img.shields.io/badge/Java-17%2B-orange) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Java](https://img.shields.io/badge/Java-17%2B-orange) [![License](https://img.shields.io/badge/license-MIT-blue)](../LICENSE)
 
 ## Features
 
@@ -91,4 +91,4 @@ src/main/java/com/pacman/
 
 ## License
 
-[MIT](LICENSE).
+[MIT](../LICENSE).

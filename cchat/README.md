@@ -94,4 +94,4 @@ flowchart LR
 
 ## License
 
-[MIT](LICENSE).
+[MIT](../LICENSE).

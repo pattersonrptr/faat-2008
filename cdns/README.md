@@ -81,4 +81,4 @@ build.bat       — convenience build script for Windows CMD
 
 ## License
 
-[MIT](LICENSE).
+[MIT](../LICENSE).

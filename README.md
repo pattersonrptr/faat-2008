@@ -30,4 +30,7 @@ Each folder has its own README with build instructions.
 
 ## License
 
-MIT for every project except `truco/`, which is GPL-3.0. Each folder has its own `LICENSE`.
+Everything in this repository is under the [MIT License](LICENSE).
+
+Exception: the Maven Wrapper scripts in `truco/` (`mvnw`, `mvnw.cmd`, `.mvn/`) are Apache Software
+Foundation code under Apache-2.0, as stated in their headers.

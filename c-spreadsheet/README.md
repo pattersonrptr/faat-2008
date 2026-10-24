@@ -47,4 +47,4 @@ gcc -Wall -O2 -o spreadsheet.exe spreadsheet.c
 
 ## License
 
-[MIT](LICENSE).
+[MIT](../LICENSE).

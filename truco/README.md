@@ -1,6 +1,6 @@
 # truco
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](../LICENSE)
 [![Java](https://img.shields.io/badge/Java-21%2B-orange?logo=openjdk)](https://adoptium.net)
 [![JavaFX](https://img.shields.io/badge/JavaFX-21.0.2-brightgreen?logo=java)](https://openjfx.io)
 [![Build](https://img.shields.io/badge/Build-Maven-red?logo=apachemaven)](https://maven.apache.org)
@@ -108,4 +108,4 @@ Dependencies flow one way only: `ui → ai/variants → core`. Nothing in `core`
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
+[MIT](../LICENSE). The Maven Wrapper (`mvnw`, `mvnw.cmd`, `.mvn/`) is Apache-2.0.
