@@ -1,0 +1,302 @@
+/* ── Root ─────────────────────────────────────────────────────────────── */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #1a1a2e;
+}
+
+/* ── Score bar ────────────────────────────────────────────────────────── */
+#scoreBar {
+    -fx-background-color: #16213e;
+    -fx-padding: 8 20 8 20;
+}
+
+.score-label {
+    -fx-text-fill: #e2e2e2;
+    -fx-font-size: 15px;
+}
+
+.score-value {
+    -fx-text-fill: #f5c842;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.variant-label {
+    -fx-text-fill: #9ab4d4;
+    -fx-font-size: 13px;
+    -fx-font-style: italic;
+}
+
+/* ── Table felt ───────────────────────────────────────────────────────── */
+#tableFelt {
+    -fx-background-color: #0b5e2a;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 12, 0, 0, 4);
+}
+
+/* ── Card (face-up) ───────────────────────────────────────────────────── */
+.card {
+    -fx-background-color: #fffef5;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 6, 0, 2, 2);
+    -fx-cursor: default;
+    -fx-min-width: 68;
+    -fx-min-height: 98;
+    -fx-max-width: 68;
+    -fx-max-height: 98;
+    -fx-pref-width: 68;
+    -fx-pref-height: 98;
+}
+
+.card-clickable {
+    -fx-cursor: hand;
+}
+
+.card-clickable:hover {
+    -fx-background-color: #fffde0;
+    -fx-translate-y: -8;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,215,0,0.7), 10, 0, 0, 0);
+}
+
+.card-clickable:pressed {
+    -fx-translate-y: -4;
+}
+
+/* ── Card (face-down) ─────────────────────────────────────────────────── */
+.card-back {
+    -fx-background-color: linear-gradient(to bottom right, #1a3a6e, #0d2244);
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 6, 0, 2, 2);
+    -fx-min-width: 68;
+    -fx-min-height: 98;
+    -fx-max-width: 68;
+    -fx-max-height: 98;
+    -fx-pref-width: 68;
+    -fx-pref-height: 98;
+    -fx-border-color: #4a6fa5;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+}
+
+/* Manilha highlight */
+.card-manilha {
+    -fx-border-color: #f5c842;
+    -fx-border-width: 2.5;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(245,200,66,0.6), 8, 0, 0, 0);
+}
+
+/* ── Card rank / suit labels ──────────────────────────────────────────── */
+.card-rank {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.card-suit {
+    -fx-font-size: 22px;
+}
+
+.card-rank-small {
+    -fx-font-size: 10px;
+}
+
+.red {
+    -fx-text-fill: #c0392b;
+}
+
+.black {
+    -fx-text-fill: #1a1a1a;
+}
+
+/* ── Player labels ────────────────────────────────────────────────────── */
+.player-label {
+    -fx-text-fill: #d4e6f1;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 0 4 0;
+}
+
+.player-label-human {
+    -fx-text-fill: #aed6f1;
+}
+
+/* ── Trick slot ───────────────────────────────────────────────────────── */
+.trick-slot {
+    -fx-min-width: 68;
+    -fx-min-height: 98;
+    -fx-max-width: 68;
+    -fx-max-height: 98;
+    -fx-background-color: rgba(0,0,0,0.25);
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255,255,255,0.15);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+/* ── Vira card ────────────────────────────────────────────────────────── */
+#viraBox {
+    -fx-padding: 4;
+}
+
+.vira-label {
+    -fx-text-fill: #9ab4d4;
+    -fx-font-size: 11px;
+}
+
+/* ── Action bar ───────────────────────────────────────────────────────── */
+#actionBar {
+    -fx-background-color: #16213e;
+    -fx-padding: 10 20 10 20;
+}
+
+.message-label {
+    -fx-text-fill: #d4e6f1;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────── */
+.btn-truco {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.btn-truco:hover { -fx-background-color: #e74c3c; }
+.btn-truco:pressed { -fx-background-color: #a93226; }
+
+.btn-accept {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.btn-accept:hover { -fx-background-color: #2ecc71; }
+
+.btn-raise {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.btn-raise:hover { -fx-background-color: #f39c12; }
+
+.btn-run {
+    -fx-background-color: #566573;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.btn-run:hover { -fx-background-color: #717d7e; }
+
+.btn-next-round {
+    -fx-background-color: #2471a3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.btn-next-round:hover { -fx-background-color: #2e86c1; }
+
+/* ── Menu screen ──────────────────────────────────────────────────────── */
+#menuRoot {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+}
+
+.menu-title {
+    -fx-text-fill: #f5c842;
+    -fx-font-size: 52px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 8, 0, 2, 2);
+}
+
+.menu-subtitle {
+    -fx-text-fill: #9ab4d4;
+    -fx-font-size: 16px;
+}
+
+.menu-field-label {
+    -fx-text-fill: #d4e6f1;
+    -fx-font-size: 14px;
+}
+
+.menu-text-field {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: #ecf0f1;
+    -fx-prompt-text-fill: #7f8c8d;
+    -fx-background-radius: 6;
+    -fx-border-color: #4a6fa5;
+    -fx-border-radius: 6;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-pref-width: 260;
+}
+
+.menu-text-field:focused {
+    -fx-border-color: #f5c842;
+}
+
+.variant-card {
+    -fx-background-color: #1e3a5f;
+    -fx-background-radius: 10;
+    -fx-border-color: #4a6fa5;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-padding: 16;
+    -fx-cursor: hand;
+}
+
+.variant-card:hover {
+    -fx-background-color: #254d7a;
+    -fx-border-color: #f5c842;
+}
+
+.variant-card-selected {
+    -fx-background-color: #1a5276;
+    -fx-border-color: #f5c842;
+    -fx-border-width: 2.5;
+}
+
+.variant-name {
+    -fx-text-fill: #f5c842;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.variant-desc {
+    -fx-text-fill: #aab7b8;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
+.btn-play {
+    -fx-background-color: #f5c842;
+    -fx-text-fill: #1a1a2e;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-background-radius: 8;
+    -fx-padding: 12 40 12 40;
+    -fx-cursor: hand;
+}
+
+.btn-play:hover { -fx-background-color: #f9d354; }
+.btn-play:pressed { -fx-background-color: #d4ac0d; }
