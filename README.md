@@ -2,7 +2,7 @@
 
 Recriações de trabalhos do curso de **Sistemas para Internet** (tecnólogo) da **FAAT — Faculdades Atibaia** (2008–2011).
 
-O código original se perdeu. Estas são reconstruções feitas em 2026 a partir do escopo de cada trabalho, mantendo as restrições originais: C e Java puros, terminal/desktop, sem bibliotecas externas.
+O código original se perdeu. Estes trabalhos eu implementei à mão na época, aprendendo as linguagens do zero; estas são reconstruções feitas em 2026, usando IA para acelerar o trabalho em vez de reescrever tudo manualmente. As restrições originais foram mantidas: C e Java puros, terminal/desktop, sem bibliotecas externas.
 
 ## Projetos
 
