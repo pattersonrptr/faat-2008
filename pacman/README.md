@@ -1,95 +1,94 @@
-# Pac-Man Java2D
+# pacman
 
-Um clone do Pac-Man clássico desenvolvido em Java puro, usando **Java2D** para todos os gráficos — sem imagens externas, sem bibliotecas de terceiros.
+A clone of the classic Pac-Man in plain Java, with every graphic drawn in **Java2D**: no external images and no third-party libraries.
+
+Rebuild of an Object-Oriented Programming course assignment at FAAT.
 
 ![Java](https://img.shields.io/badge/Java-17%2B-orange) ![License](https://img.shields.io/badge/license-MIT-blue)
 
-## Funcionalidades
+## Features
 
-- **Pac-Man** animado (boca abre/fecha) com rotação por direção via `Graphics2D`
-- **4 fantasmas** com IA fiel ao arcade original:
-  - 🔴 **Blinky** — persegue diretamente
-  - 🩷 **Pinky** — mira 4 tiles à frente do Pac-Man
-  - 🩵 **Inky** — triangula com a posição do Blinky
-  - 🟠 **Clyde** — persegue quando longe, foge quando perto
-- Modo **Frightened** com contagem regressiva e efeito piscando
-- **Frutas bônus** (cereja, morango e mais) desenhadas com Java2D
-- **Som sintetizado** com `javax.sound.sampled` — sem arquivos de áudio externos
-- **Menu de pausa** com controle individual de volume e mute para música e efeitos
-- HUD com score, vidas e pontuação flutuante ao comer fantasmas
+- **Animated Pac-Man** (mouth opening and closing), rotated by direction with `Graphics2D`
+- **4 ghosts** with the targeting rules of the original arcade:
+  - 🔴 **Blinky** chases Pac-Man directly
+  - 🩷 **Pinky** aims 4 tiles ahead of Pac-Man
+  - 🩵 **Inky** triangulates from Blinky's position
+  - 🟠 **Clyde** chases when far away and flees when close
+- **Frightened mode** with a countdown and a blinking warning
+- **Bonus fruits** (cherry, strawberry and more) drawn with Java2D
+- **Synthesized sound** with `javax.sound.sampled`, with no audio files
+- **Pause menu** with separate volume and mute controls for music and effects
+- HUD with score, lives and floating points when a ghost is eaten
 
-## Pré-requisitos
+## Requirements
 
-- Java 17 ou superior (testado com OpenJDK 25)
+- Java 17 or newer (tested with OpenJDK 25)
 
-## Como rodar
+## Running
 
-### Compilar e executar diretamente
+### Compile and run directly
 
 ```bash
-# Compilar
 javac -d out src/main/java/com/pacman/*.java
-
-# Executar
 java -cp out com.pacman.Main
 ```
 
-### Com Maven
+### With Maven
 
 ```bash
 mvn exec:java
 ```
 
-## Controles
+## Controls
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| `W` / `↑` | Mover para cima |
-| `S` / `↓` | Mover para baixo |
-| `A` / `←` | Mover para esquerda |
-| `D` / `→` | Mover para direita |
-| `P` / `Esc` | Pausar / Retomar |
-| `R` | Reiniciar (na tela de Game Over) |
+| `W` / `↑` | Move up |
+| `S` / `↓` | Move down |
+| `A` / `←` | Move left |
+| `D` / `→` | Move right |
+| `P` / `Esc` | Pause / resume |
+| `R` | Restart (on the Game Over screen) |
 
-### No menu de pausa
+### Pause menu
 
-| Tecla | Ação |
+| Key | Action |
 |---|---|
-| `↑` / `↓` | Navegar entre opções |
-| `←` / `→` | Ajustar volume |
-| `M` | Mutar/desmutar música |
-| `E` | Mutar/desmutar efeitos |
-| `Enter` | Confirmar |
+| `↑` / `↓` | Move between options |
+| `←` / `→` | Adjust volume |
+| `M` | Mute/unmute music |
+| `E` | Mute/unmute effects |
+| `Enter` | Confirm |
 
-## Estrutura do projeto
+## Project structure
 
 ```
 src/main/java/com/pacman/
-├── Main.java          # Ponto de entrada
+├── Main.java          # entry point
 ├── Game.java          # JFrame
-├── GamePanel.java     # Game loop, renderização, colisões
-├── Direction.java     # Enum de direções com dx/dy e ângulo
-├── PacMan.java        # Sprite e lógica do Pac-Man
-├── Ghost.java         # Sprite e IA dos fantasmas (4 personalidades)
-├── Maze.java          # Labirinto 19×21, pastilhas e power pellets
-├── BonusFruit.java    # Frutas bônus com sprites Java2D
-├── SoundManager.java  # Síntese de som com javax.sound.sampled
-└── PauseMenu.java     # Menu de pausa com controle de volume
+├── GamePanel.java     # game loop, rendering, collisions
+├── Direction.java     # direction enum with dx/dy and angle
+├── PacMan.java        # Pac-Man sprite and logic
+├── Ghost.java         # ghost sprites and AI (4 personalities)
+├── Maze.java          # 19×21 maze, pellets and power pellets
+├── BonusFruit.java    # bonus fruits drawn with Java2D
+├── SoundManager.java  # sound synthesis with javax.sound.sampled
+└── PauseMenu.java     # pause menu with volume control
 ```
 
-## Pontuação
+## Scoring
 
-| Item | Pontos |
+| Item | Points |
 |---|---|
-| Pastilha comum | 10 |
+| Pellet | 10 |
 | Power pellet | 50 |
-| Fantasma (1º) | 200 |
-| Fantasma (2º) | 400 |
-| Fantasma (3º) | 800 |
-| Fantasma (4º) | 1600 |
-| Cereja | 100 |
-| Morango | 300 |
+| Ghost (1st) | 200 |
+| Ghost (2nd) | 400 |
+| Ghost (3rd) | 800 |
+| Ghost (4th) | 1600 |
+| Cherry | 100 |
+| Strawberry | 300 |
 
-## Licença
+## License
 
-MIT
+[MIT](LICENSE).

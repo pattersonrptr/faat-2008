@@ -1,4 +1,4 @@
-# JTruco
+# truco
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-21%2B-orange?logo=openjdk)](https://adoptium.net)
@@ -6,7 +6,9 @@
 [![Build](https://img.shields.io/badge/Build-Maven-red?logo=apachemaven)](https://maven.apache.org)
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow)]()
 
-A Brazilian Truco card game built with JavaFX. Play Truco Paulista against three AI opponents with full bid/raise/run mechanics.
+**JTruco**, a Brazilian Truco card game built with JavaFX. Play Truco Paulista against three AI opponents with full bid/raise/run mechanics.
+
+Rebuild of an Object-Oriented Programming course assignment at FAAT.
 
 ---
 
@@ -46,20 +48,20 @@ First team to **12 points** wins the match.
 ## Requirements
 
 - JDK 21 or later (tested on JDK 25 / Eclipse Adoptium)
-- No separate Maven installation needed — the wrapper is included
+- No Maven installation needed: the [Maven Wrapper](https://maven.apache.org/wrapper/) downloads Maven 3.9.6 on first use
 
 ---
 
 ## Build and run
 
-```cmd
-mvnw.cmd javafx:run       # launch the game
-mvnw.cmd compile          # compile only
-mvnw.cmd test             # run all tests
-mvnw.cmd test -Dtest=DeckTest  # run a single test class
+```bash
+./mvnw javafx:run              # launch the game
+./mvnw compile                 # compile only
+./mvnw test                    # run all tests
+./mvnw test -Dtest=DeckTest    # run a single test class
 ```
 
-> **Windows note:** use `mvnw.cmd`, not `mvn`. The wrapper sets `JAVA_HOME` and `MAVEN_HOME` automatically.
+On Windows, use `mvnw.cmd` instead of `./mvnw`.
 
 ---
 

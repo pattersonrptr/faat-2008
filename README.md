@@ -1,29 +1,33 @@
-# faat-2008
+# faat-sistemas-para-internet
 
-Recriações de trabalhos do curso de **Sistemas para Internet** (tecnólogo) da **FAAT — Faculdades Atibaia** (2008–2011).
+Rebuilds of coursework from the **Internet Systems** degree (Sistemas para Internet, a technology degree) at **FAAT — Faculdades Atibaia**, 2008–2011.
 
-O código original se perdeu. Estes trabalhos eu implementei à mão na época, aprendendo as linguagens do zero; estas são reconstruções feitas em 2026, usando IA para acelerar o trabalho em vez de reescrever tudo manualmente. As restrições originais foram mantidas: C e Java puros, terminal/desktop, sem bibliotecas externas.
+The original code was lost. I wrote these projects by hand at the time, learning each language from scratch. What is here are reconstructions made in 2026, using AI to speed up the work instead of rewriting everything manually. The original constraints were kept: plain C and Java, terminal or desktop, no external libraries.
 
-## Projetos
+## Projects
 
-| Pasta | Descrição | Linguagem | Disciplina |
+| Folder | Description | Language | Course |
 |---|---|---|---|
-| [`cdns/`](cdns/) | Servidor DNS + web para descoberta de serviços em rede local | C | Redes |
-| [`cchat/`](cchat/) | Chat via sockets TCP (local ou em rede) | C | Redes |
-| [`hotelier/`](hotelier/) | Gerenciamento de hotel via terminal (hóspedes, quartos, check-in/out) | C | Linguagem de Programação |
-| [`c-spreadsheet/`](c-spreadsheet/) | Planilha no console do Windows, renderizada no buffer de console | C | Linguagem de Programação |
-| [`truco/`](truco/) | Truco Paulista em JavaFX, com IA nos adversários | Java | Programação Orientada a Objetos |
-| [`pacman/`](pacman/) | Pac-Man em Java2D | Java | Programação Orientada a Objetos |
+| [`cdns/`](cdns/) | DNS + web server for service discovery on a local network | C | Networks |
+| [`cchat/`](cchat/) | Chat over TCP sockets (local or on a network) | C | Networks |
+| [`hotelier/`](hotelier/) | Hotel management in the terminal (guests, rooms, check-in/out, finance, reports) | C | Programming Language |
+| [`c-spreadsheet/`](c-spreadsheet/) | Spreadsheet for the Windows console, with formulas and flicker-free rendering | C | Programming Language |
+| [`truco/`](truco/) | Truco Paulista in JavaFX, with AI opponents | Java | Object-Oriented Programming |
+| [`pacman/`](pacman/) | Pac-Man in Java2D, with the arcade ghost AI and synthesized sound | Java | Object-Oriented Programming |
 
-Cada pasta tem seu próprio README com instruções de compilação.
+Each folder has its own README with build instructions.
 
 ## Roadmap
 
-`truco/` e `pacman/` são os dois que pretendo evoluir:
+`truco/` and `pacman/` are the two I plan to keep developing:
 
-- **pacman** — adicionar tema visual customizado (campo de futebol, sprites próprios).
-- **truco** — a lógica do Truco Paulista já está implementada; falta a camada visual.
+- **truco**: the game is playable (Truco Paulista with a JavaFX table). Next: other variants (Mineiro, Argentino with Envido), trick history and card animations.
+- **pacman**: a custom visual theme (soccer field, original sprites).
 
-## Histórico
+## History
 
-`cdns`, `cchat`, `hotelier`, `truco` (ex-`jtruco`) e `pacman` (ex-`Java-Pac-Man`) eram repositórios separados, trazidos para cá com `git subtree`, preservando os commits.
+`cdns`, `cchat`, `hotelier`, `truco` (formerly `jtruco`) and `pacman` (formerly `Java-Pac-Man`) used to be separate repositories and were brought here with `git subtree`, keeping their commits.
+
+## License
+
+MIT for every project except `truco/`, which is GPL-3.0. Each folder has its own `LICENSE`.

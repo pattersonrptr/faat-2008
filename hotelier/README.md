@@ -1,53 +1,47 @@
-# Hotel Management System
+# hotelier
 
-Sistema de gerenciamento hoteleiro completo, desenvolvido em **C puro**, operado inteiramente via terminal.
+A hotel management system in plain C, run entirely from the terminal: rooms, guests, reservations, check-in and check-out, services, finances, housekeeping, staff and reports.
 
-> **Nota:** Este projeto foi um exercício de aprendizagem — um experimento pessoal para revisitar a linguagem C, reacostumar com gerenciamento manual de memória, structs, I/O de arquivos binários e organização de código sem o conforto de frameworks modernos. Nada de C++, nada de bibliotecas externas.
+Rebuild of a Programming Language course assignment at FAAT. The interface is in Portuguese.
 
----
+## Features
 
-## O que o sistema faz
+It covers the whole life cycle of a stay, from registration to checkout:
 
-Cobre o ciclo de vida completo de uma hospedagem, do cadastro ao checkout:
-
-| Módulo | Descrição |
+| Module | Description |
 |---|---|
-| **Quartos** | Cadastro, status (livre / ocupado / manutenção / bloqueado), histórico de manutenções, mapa de ocupação |
-| **Hóspedes** | Cadastro com CPF validado ou passaporte, programa de fidelidade (Bronze → Diamante), blacklist |
-| **Reservas** | Criação com conflito de datas, múltiplos quartos, código de confirmação único, cancelamento e no-show |
-| **Check-in / Check-out** | Early check-in, caução, acompanhantes extras, late check-out, extrato final completo |
-| **Serviços** | Frigobar, room service, lavanderia, estacionamento, outros consumos — todos vinculados à reserva |
-| **Financeiro** | Faturamento, caixa do dia, receita por período, contas a receber, caixa por turno (manhã/tarde/noite) |
-| **Governança** | Lista de limpeza por prioridade, status por quarto, objetos esquecidos |
-| **Funcionários** | CRUD com cargos, turnos e níveis de acesso (1 = básico ... 5 = admin) |
-| **Relatórios** | Taxa de ocupação, RevPAR/ADR, ranking de hóspedes, previsão 30 dias, no-shows, exportação CSV |
-| **Configurações** | Dados do hotel, taxas, programa de fidelidade, senha, backup dos dados |
+| **Rooms** | Registration, status (free / occupied / maintenance / blocked), maintenance history, occupancy map |
+| **Guests** | Registration with validated CPF or passport, loyalty program (Bronze → Diamond), blacklist |
+| **Reservations** | Date conflict checks, multiple rooms, unique confirmation code, cancellation and no-show |
+| **Check-in / check-out** | Early check-in, deposit, extra companions, late check-out, full final statement |
+| **Services** | Minibar, room service, laundry, parking and other charges, all tied to the reservation |
+| **Finance** | Billing, daily cash, revenue by period, accounts receivable, cash by shift (morning/afternoon/night) |
+| **Housekeeping** | Cleaning list by priority, status per room, lost and found |
+| **Staff** | CRUD with roles, shifts and access levels (1 = basic ... 5 = admin) |
+| **Reports** | Occupancy rate, RevPAR/ADR, guest ranking, 30-day forecast, no-shows, CSV export |
+| **Settings** | Hotel data, rates, loyalty program, password, data backup |
 
----
+## Technologies
 
-## Tecnologias
+- **Language:** C99
+- **Compiler:** GCC (`-std=c99 -Wall -Wextra -pedantic`)
+- **Interface:** plain console, no ncurses or graphics libraries
+- **Persistence:** binary `.dat` files, fully loaded at startup and written on every critical operation
+- **External dependencies:** none, only the standard C library (`stdio`, `stdlib`, `string`, `time`, `ctype`) plus `direct.h` for creating backup folders
+- **Build:** `make` (minimal Makefile)
+- **Tests:** PowerShell (end-to-end smoke test with input piped in)
 
-- **Linguagem:** C99
-- **Compilador:** GCC (`-std=c99 -Wall -Wextra -pedantic`)
-- **Interface:** Console puro — sem ncurses, sem bibliotecas gráficas
-- **Persistência:** Arquivos binários `.dat` (leitura total na inicialização, escrita em cada operação crítica)
-- **Dependências externas:** nenhuma — apenas `libc` padrão (`stdio`, `stdlib`, `string`, `time`, `ctype`)
-- **Build:** `make` (Makefile minimalista)
-- **Testes:** PowerShell (smoke test end-to-end com entradas via pipe)
-
----
-
-## Estrutura do projeto
+## Project structure
 
 ```
-hotel-management-system/
+hotelier/
 ├── src/
 │   ├── main.c
-│   ├── types.h              ← todos os enums e structs
-│   ├── auth.c / .h          ← login, sessão, hash djb2
-│   ├── menu.c / .h          ← navegação por menus com function pointers
-│   ├── storage.c / .h       ← I/O binário, backup, audit log
-│   ├── utils.c / .h         ← input seguro, datas, CPF, strings
+│   ├── types.h              ← all enums and structs
+│   ├── auth.c / .h          ← login, session, djb2 hash
+│   ├── menu.c / .h          ← menu navigation with function pointers
+│   ├── storage.c / .h       ← binary I/O, backup, audit log
+│   ├── utils.c / .h         ← safe input, dates, CPF, strings
 │   ├── rooms.c / .h
 │   ├── guests.c / .h
 │   ├── reservations.c / .h
@@ -59,62 +53,52 @@ hotel-management-system/
 │   ├── reports.c / .h
 │   └── config.c / .h
 ├── tests/
-│   └── smoke_test.ps1       ← teste funcional automatizado
-├── data/                    ← gerado em runtime (gitignored)
-├── reports/                 ← CSVs exportados (gitignored)
-├── backups/                 ← backups manuais (gitignored)
+│   └── smoke_test.ps1       ← automated functional test
+├── data/                    ← created at runtime (gitignored)
+├── reports/                 ← exported CSVs (gitignored)
+├── backups/                 ← manual backups (gitignored)
 └── Makefile
 ```
 
----
+## Running
 
-## Como rodar
+### Requirements
 
-### Pré-requisitos
+Windows, with GCC and `mingw32-make` on the `PATH` (for example from [MSYS2](https://www.msys2.org/) or [Strawberry Perl](https://strawberryperl.com/)). The backup uses `_mkdir` from `<direct.h>` and the Makefile uses `cmd` syntax, so the project does not build on Linux or macOS as it is.
 
-- GCC disponível no PATH (Linux/macOS nativo; Windows via [Strawberry Perl](https://strawberryperl.com/) ou [MSYS2](https://www.msys2.org/))
-- `make` (incluído com GCC no Linux/macOS; no Windows use `mingw32-make`)
+### Build and run
 
-### Compilar e executar
-
-```bash
-# Linux / macOS
-make run
-
-# Windows (PowerShell ou cmd)
+```powershell
 mingw32-make run
 ```
 
-O executável gerado é `hotel` (Linux/macOS) ou `hotel.exe` (Windows). A pasta `data/` é criada automaticamente pelo Makefile na primeira compilação.
+This produces `hotel.exe`. The Makefile creates the `data/` folder on the first build.
 
-### Login padrão
+### Default login
 
 ```
-Usuário: admin
-Senha:   admin123
+User:     admin
+Password: admin123
 ```
 
-> Altere a senha logo após o primeiro acesso via **Configurações → Alterar minha senha**.
+> Change the password after the first login, under **Configurações → Alterar minha senha**.
 
-### Limpar a build
-
-```bash
-make clean        # Linux/macOS
-mingw32-make clean  # Windows
-```
-
----
-
-## Teste automatizado
-
-O script `tests/smoke_test.ps1` executa um fluxo completo de ponta a ponta (login → quarto → hóspede → reserva → check-in → serviço → checkout) e valida 9 assertivas na saída.
+### Clean the build
 
 ```powershell
-# A partir da raiz do projeto
+mingw32-make clean
+```
+
+## Automated test
+
+`tests/smoke_test.ps1` runs a full flow from end to end (login → room → guest → reservation → check-in → service → checkout) and checks 9 assertions on the output.
+
+```powershell
+# from the project root
 .\tests\smoke_test.ps1
 ```
 
-O script limpa a pasta `data/` antes de rodar para garantir um ambiente limpo. A saída esperada é:
+The script clears the `data/` folder first so it always starts from a clean state. Expected output:
 
 ```
 [PASS] Login admin bem-sucedido
@@ -130,19 +114,14 @@ O script limpa a pasta `data/` antes de rodar para garantir um ambiente limpo. A
 RESULTADO: PASSOU - todos os testes OK
 ```
 
----
+## Design decisions
 
-## Decisões de design
+- **Fixed-size static arrays** (`MAX_ROOMS 200`, `MAX_GUESTS 5000`, etc.) instead of linked lists or dynamic allocation, for simplicity.
+- **Menus built from function pointers** in `MenuItem` arrays, so adding a module is mostly mechanical.
+- **djb2 hash for passwords.** Enough for coursework. A real system would use bcrypt or Argon2.
+- **Audit log** in plain text (`data/audit.log`) records every operation with a timestamp and `staff_id`.
+- **Manual backup** copies every `.dat` file to `backups/YYYY-MM-DD_HHMMSS/` with `_mkdir` and a `fread`/`fwrite` loop, with no external dependencies.
 
-- **Arrays estáticos de tamanho fixo** (`MAX_ROOMS 200`, `MAX_GUESTS 5000`, etc.) em vez de listas ligadas ou alocação dinâmica — simplicidade intencional.
-- **Menus via `function pointers`** em arrays de `MenuItem`, tornando a adição de módulos o mais mecânica possível.
-- **Hash djb2** para senhas — suficiente para um exercício; em produção usaria bcrypt ou Argon2.
-- **Sem `bool` do C++** — flags são `int`, como manda o C99 sem `<stdbool.h>` quando não necessário.
-- **Audit log** em texto plano (`data/audit.log`) registra toda operação com timestamp e `staff_id`.
-- **Backup manual** copia todos os `.dat` para `backups/YYYY-MM-DD_HHMMSS/` via `_mkdir` + loop `fread/fwrite`, sem dependências externas.
+## License
 
----
-
-## Licença
-
-Uso livre. Projeto pessoal de aprendizagem — sem garantias de qualquer natureza.
+[MIT](LICENSE).

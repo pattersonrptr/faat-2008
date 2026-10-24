@@ -2,6 +2,8 @@
 
 A minimal **custom DNS + web server** system written in C, designed as a LAN service-discovery experiment.
 
+Rebuild of a Networks course assignment at FAAT.
+
 Three programs form the stack:
 
 | Binary | Description |
@@ -79,4 +81,4 @@ build.bat       — convenience build script for Windows CMD
 
 ## License
 
-MIT
+[MIT](LICENSE).
