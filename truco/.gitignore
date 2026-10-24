@@ -31,3 +31,7 @@ Thumbs.db
 
 # Claude Code local settings (personal/machine-specific)
 .claude/
+
+# Local instructions for AI coding tools
+CLAUDE.md
+AGENTS.md
